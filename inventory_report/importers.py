@@ -1,16 +1,35 @@
-from typing import Dict, Type
+from typing import Dict, Type, List
+from abc import ABC, abstractmethod
+from inventory_report.product import Product
+import json
+import csv
 
 
-class Importer:
-    pass
+class Importer(ABC):
+    def __init__(self, path: str) -> None:
+        self.path = path
+
+    @abstractmethod
+    def import_data(self) -> List[Product]:
+        raise NotImplementedError
 
 
-class JsonImporter:
-    pass
+class JsonImporter(Importer):
+    def import_data(self) -> List[Product]:
+        with open(self.path, "r") as file:
+            data = json.load(file)
+            self.products = [Product(**product) for product in data]
+
+        return self.products
 
 
-class CsvImporter:
-    pass
+class CsvImporter(Importer):
+    def import_data(self) -> List[Product]:
+        with open(self.path, "r") as file:
+            reader = csv.DictReader(file)
+            self.products = [Product(**product) for product in reader]
+
+        return self.products
 
 
 # Não altere a variável abaixo

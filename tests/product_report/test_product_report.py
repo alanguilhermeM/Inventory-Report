@@ -12,5 +12,3 @@ def test_product_report() -> None:
         "stored according to the following instructions: non."
     )
     assert instance.__str__() == expected_output
-
-
